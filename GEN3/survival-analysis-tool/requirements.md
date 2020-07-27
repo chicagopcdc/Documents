@@ -69,7 +69,7 @@ Survival analysis tool's Microservice is a newly developed microservice added to
 
 For successful integration with the existing Gen3 platform, Microservice needs to implement some boilerplate code. See [this repository](https://github.com/chicagopcdc/PcdcAnalysisTools) for the work in progress.
 
-## Request API
+### Request API
 
 **:warning: Request API is currently not stable.**
 
@@ -77,15 +77,33 @@ Microservice listens to POST request with the payload in JSON of the following s
 
 ```jsonc
 {
-  "filter": {
+  "patientSearchCriteria": {
     // as constructed by <ExplorerFilter>
+    "query": "",
+    "variables": {
+      "filter": {
+        // ...
+      }
+    }
   },
-  "factor": [
-    // as constructed by React Component's controller child component;
-    // array of string
-  ]
+  "factorVariable": ["foo"], // main treatment variable
+  "stratificationVariable": ["bar"], // additional stratifying variables
+  "efsFlag": false, // flag for evant-free survival (EFS)
+  "start_time": 0,
+  "end_time": 10,
+  "time_unit": "year",
+  "userName": null
 }
 ```
+
+#### Discussions
+
+- Should `factorVariable` allow for multiple values?
+  - Survival analysis models often distinguish one key covariate (treatment), whose effect size is of main interest, and other cofounders to adjust for. (The distinction is informal--i.e. for interpretation only.) Accordingly, it may not be sensible for `factorVariable` to have multiple inputs.
+- Should `factorVariable` and `stratificationVariable` be renamed?
+  - In terms of fitting survival curves, `factorVariable` and `stratificationVariable` are both covariates without any formal difference. Meanwhile, in the reference tool for INRG, `stratificationVariable` does double duty as it is also used to facet the survival curves into multiple panels. Renaming/restructuring them to, for instance, `factorVariable` and `facetVariable` and making `facetVariable` only responsible for the visual aspect of the survival curve may help clarifying the role of each input.
+  - If the input value for `**Variable` is an array, using the plural form may serve as a more descriptive name.
+- Should `time_unit` allow for value other than "year"?
 
 ### Response API
 
