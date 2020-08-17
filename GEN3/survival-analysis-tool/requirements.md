@@ -91,8 +91,7 @@ Microservice listens to POST request with the payload in JSON of the following s
   "efsFlag": false, // flag for evant-free survival (EFS)
   "start_time": 0,
   "end_time": 10,
-  "time_unit": "year",
-  "userName": null
+  "time_unit": "year"
 }
 ```
 
