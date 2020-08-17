@@ -99,7 +99,7 @@ Microservice listens to POST request with the payload in JSON of the following s
 #### Discussions
 
 - Should `factorVariable` allow for multiple values?
-  - Survival analysis models often distinguish one key covariate (treatment), whose effect size is of main interest, and other cofounders to adjust for. (The distinction is informal--i.e. for interpretation only.) Accordingly, it may not be sensible for `factorVariable` to have multiple inputs.
+  - Survival analysis models often distinguish one key covariate (treatment), whose effect size is of main interest, and other confounders to adjust for. (The distinction is informal--i.e. for interpretation only.) Accordingly, it may not be sensible for `factorVariable` to have multiple inputs.
 - Should `factorVariable` and `stratificationVariable` be renamed?
   - In terms of fitting survival curves, `factorVariable` and `stratificationVariable` are both covariates without any formal difference. Meanwhile, in the reference tool for INRG, `stratificationVariable` does double duty as it is also used to facet the survival curves into multiple panels. Renaming/restructuring them to, for instance, `factorVariable` and `facetVariable` and making `facetVariable` only responsible for the visual aspect of the survival curve may help clarifying the role of each input.
   - If the input value for `**Variable` is an array, using the plural form may serve as a more descriptive name.
