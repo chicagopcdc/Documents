@@ -89,9 +89,9 @@ Microservice listens to POST request with the payload in JSON of the following s
   "factorVariable": "foo", // main treatment variable
   "stratificationVariable": "bar", // additional stratifying variables
   "efsFlag": false, // flag for evant-free survival (EFS)
-  "start_time": 0,
-  "end_time": 10,
-  "time_unit": "year"
+  "startTime": 0,
+  "endTime": 10
+  // "timeUnit": "year" // not relevant for v1.0 release
 }
 ```
 
@@ -130,17 +130,12 @@ Microservice sends response with data in JSON of the following shape:
 
 ## Resources
 
-- Proof-of-concept for Microservice ([GitHub](https://github.com/bobaekang/poc-survival-alternative))
-  - Both R and Python implementations (archived)
-  - R version uses [plumber](https://www.rplumber.io) for API server and [survival](https://github.com/therneau/survival) for survival analysis
-  - Python version uses [Flask](https://flask.palletsprojects.com) for API server and [lifelines](https://lifelines.readthedocs.io/en/latest/) for survival analysis
-- Prototype in development for Microservice ([GitHub](https://github.com/chicagopcdc/survival-analysis-service))
-  - Python implementation (WIP)
-  - Based on the Python version PoC
+- Proof-of-concept for React Component ([GitHub](https://github.com/bobaekang/poc-survival-react-component))
 - Proof-of-concept for drawing survival curve
   - Using [Recharts](http://recharts.org/en-US) and [React](https://reactjs.org/) ([GitHub](https://github.com/bobaekang/react-recharts-survival-curve))
   - Using [D3](https://d3js.org/) and [React](https://reactjs.org/) ([GitHub](https://github.com/bobaekang/react-d3-survival-curve))
   - Based on [Survival (Clinical) of Live Cancer Explorer](https://qbrc.swmed.edu/projects/liverspore/multi_group_survival.php) by UT Southwestern Medical Center
+- Proof-of-concept for Microservice ([GitHub](https://github.com/bobaekang/poc-survival-microservice))
 - Microservice work-in-progress repository ([GitHub](https://github.com/chicagopcdc/PcdcAnalysisTools))
   - Using [sheepdog](https://github.com/uc-cdis/sheepdog/) codebase as a template
   - Repo currently private
