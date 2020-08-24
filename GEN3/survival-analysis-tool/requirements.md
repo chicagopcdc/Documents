@@ -115,18 +115,29 @@ Microservice sends response with data in JSON of the following shape:
   "pval": ,     // p-value of log-rank test; float if available, null otherwise
   "risktable": [
     {
-      "n": ,    // count; int
-      "year": , // time in year; float
+      "name": , // based on factor/stratificationVariable values; string
+      "data": {
+        "nrisk": , // number at risk; int
+        "time": ,  // time in year; float
+      }
     }
   ],
   "survival": [
     {
-      "prob": , // survival probability; float
-      "time":   // time in year; float
+      "name": , // based on factor/stratificationVariable values; string
+      "data": {
+        "prob": , // survival probability; float
+        "time":   // time in year; float
+      }
     }
   ]
 }
 ```
+
+- `"name"` for each item in risktable/survival array is set to
+  - `"All"` if neither `factorVariable` nor `stratificationVariable` value is provided.
+  - `[factorVariable]=[factorVariableValue]` if only `factorVariable` value is provided, e.g. `RACE=1`.
+  - `[factorVariable]=[factorVariableValue],[stratificationVariable]=[stratificationVariableValue]` if both `factorVariable` and `stratificationVariable` values are provided, e.g. `RACE=1,SEX=1`
 
 ## Resources
 
