@@ -180,3 +180,182 @@ While there are multiple Python packages available for conducting statistical te
 
 - The current API design restricts `exposureVariable` to be binary. While it is possible to relax this restriction and allow multiple top-level groups, i.e. `exposureVariable` values, this will result in a more complicated backend to implement additional statistical tests to handle such generalized cases.
 - The current API design assumes comparing means (using two-sample Student's t-test for equal means) for any continuous "confounding variable" as this is expected to be the most common use case. Implmenenting a comparison in other statistics between groups for a continuous variable will result in a more complicated backend to support different tests.
+
+## Example
+
+### User input
+
+User-provided values are shown in `monospace`.
+
+- Exposure Variable:
+  - Name: `"SMN"`
+  - True if:
+    - Value: `1`
+    - Operator: `"equal to"`
+  - Label for:
+    - "True" group: `"SMN Formed"`
+    - "False" group: `"No SMN Formed"`
+- Confounding Variables:
+  - Variable 1:
+    - Name: `"AGE"`
+    - Label: `"Mean age at diagnosis (mo)"`
+    - Type: `"continuous"`
+    - Unit: `30`
+  - Variable 2:
+    - Name: `"AGE"`
+    - Label: `"Age at diagnosis"`
+    - Type: `"bucketized"`
+    - Cutoffs:
+      - Value: `18`
+    - Keys:
+      - Value: `"< 18 mo"`
+      - Value: `">= 18 mo"`
+  - Variable 3:
+    - Name: `"SEX"`
+    - Label: `"Sex"`
+    - Type: `"categorical"`
+    - Values:
+      - Value: `0`
+      - Value: `1`
+    - Keys:
+      - Value: `"Female"`
+      - Value: `"Male"`
+
+### Request body
+
+From React Component to Microservice
+
+```json
+{
+  "patientSearchCriteria": {},
+  "exposureVariable": {
+    "name": "SMN",
+    "trueIf": {
+      "value": "1",
+      "operator": "eq"
+    },
+    "label": {
+      "true": "SMN Formed",
+      "false": "No SMN Formed"
+    }
+  },
+  "confoundingVariables": [
+    {
+      "name": "AGE",
+      "label": "Mean age at diagnosis (mo)",
+      "type": "continous",
+      "unit": 30
+    },
+    {
+      "name": "AGE",
+      "label": "Age at diagnosis",
+      "type": "bucketized",
+      "unit": 30,
+      "cutoffs": [18],
+      "keys": ["< 18 mo", ">= 18 mo"]
+    },
+    {
+      "name": "SEX",
+      "label": "Sex",
+      "type": "categorical",
+      "values": [0, 1],
+      "keys": ["Female", "Male"]
+    }
+  ]
+}
+```
+
+### Response data
+
+From Microservice to React Component.
+
+```json
+{
+  "headers": {
+    "size": "Sample size (SMN)",
+    "true": "SMN Formed",
+    "false": "No SMN Formed"
+  },
+  "variables": [
+    {
+      "name": "Mean age at diagnosis (mo)",
+      "size": {
+        "total": 5987,
+        "true": 43
+      },
+      "pval": 0.27,
+      "keys": [
+        {
+          "name": "",
+          "data": {
+            "true": 27.5,
+            "false": 18.0
+          }
+        }
+      ]
+    },
+    {
+      "name": "Age at diagnosis",
+      "size": {
+        "total": 5987,
+        "true": 43
+      },
+      "pval": 0.27,
+      "keys": [
+        {
+          "name": "< 18 mo",
+          "data": {
+            "true": 41.9,
+            "false": 50.0
+          }
+        },
+        {
+          "name": ">= 18 mo",
+          "data": {
+            "true": 58.1,
+            "false": 50.0
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sex",
+      "size": {
+        "total": 5987,
+        "true": 43
+      },
+      "pval": 0.07,
+      "keys": [
+        {
+          "name": "Female",
+          "data": {
+            "true": 62.8,
+            "false": 46.6
+          }
+        },
+        {
+          "name": "Male",
+          "data": {
+            "true": 37.2,
+            "false": 53.4
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+### Resulting table
+
+Rendered by React Component.
+
+|                                | Sample size (SMN) | SMN Formed | No SMN Formed | _P_-value |
+| ------------------------------ | ----------------- | ---------- | ------------- | --------- |
+| **Mean age at diagnosis (mo)** | 5987 (43)         | 27.5       | 18.0          | 0.22      |
+| **Age at diagnosis**           | 5987 (43)         |            |               | 0.27      |
+| < 18 mo                        |                   | 41.9       | 50            |           |
+| >= 18 mo                       |                   | 58.1       | 50            |           |
+| **Sex**                        | 5987 (43)         |            |               | 0.07      |
+| Female                         |                   | 62.8       | 46.6          |           |
+| Male                           |                   | 37.2       | 53.4          |           |
