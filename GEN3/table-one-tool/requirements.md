@@ -359,3 +359,13 @@ Rendered by React Component.
 | **Sex**                        | 5987 (43)         |            |               | 0.07      |
 | Female                         |                   | 62.8       | 46.6          |           |
 | Male                           |                   | 37.2       | 53.4          |           |
+
+## References
+
+- Survival Analysis tool
+  - As noted above, the current tool shares a lot of elements with Survival Analysis tool
+  - Proof-of-concept for React Component ([GitHub](https://github.com/bobaekang/poc-survival-react-component))
+  - Proof-of-concept for Microservice ([GitHub](https://github.com/bobaekang/poc-survival-microservice))
+- Microservice work-in-progress repository ([GitHub](https://github.com/chicagopcdc/PcdcAnalysisTools))
+  - Using [sheepdog](https://github.com/uc-cdis/sheepdog/) codebase as a template
+  - Repo currently private
