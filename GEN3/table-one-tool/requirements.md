@@ -175,3 +175,8 @@ Microservice sends response with data in JSON of the following shape:
 ### Notes on dependencies
 
 While there are multiple Python packages available for conducting statistical tests, it is highly recommended to use `scipy.stats` module for this job since `scipy` is an existing dependency for `PcdcAnalysisTools`. For handling data, `pandas` and `numpy` should suffice, which are also existing dependencies.
+
+## Limitations and expectations
+
+- The current API design restricts `exposureVariable` to be binary. While it is possible to relax this restriction and allow multiple top-level groups, i.e. `exposureVariable` values, this will result in a more complicated backend to implement additional statistical tests to handle such generalized cases.
+- The current API design assumes comparing means (using two-sample Student's t-test for equal means) for any continuous "confounding variable" as this is expected to be the most common use case. Implmenenting a comparison in other statistics between groups for a continuous variable will result in a more complicated backend to support different tests.
