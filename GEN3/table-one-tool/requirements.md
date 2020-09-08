@@ -49,6 +49,10 @@ The following features and functionalities are required of React Component:
   - input fields for "confounding variables" should allow the user to variables to use as well as for each variable 1) choose type (categorical, bucketized, continuous), 2) set of values (categorical) or cutoff values (bucketized), and 3) (optional) labels for each category or bucket.
 - A child component to display table output
 
+#### User input form example
+
+![Form image](./images/form.png)
+
 ### Notes on dependencies
 
 For user input form, using vanila JSX elements (`<form>`, `<input>`, `<select>`, etc.) is strongly recommended for the prototpye/proof-of-concept application. For integrating into the `chicaopcdc/data-portal` codebase, consider replacing `<select>` with [React Select](https://react-select.com/) to match select elements in other parts of the codebase.
