@@ -46,7 +46,7 @@ The following features and functionalities are required of React Component:
 - Access to the filter values set by users via `<ExplorerFilter>` UI
 - A child component to encode user input for "exposure variable" and "confounding variables".
   - input fields for "exposure variable" should allow the user to 1) select a variable, 2) choose "true" condition (specific category or range of values)
-  - input fields for "confounding variables" should allow the user to variables to use as well as for each variable 1) choose type (categorical, bucketized, continuous), 2) set of values (categorical) or cutoff values (bucketized), and 3) (optional) labels for each category or bucket.
+  - input fields for "confounding variables" should allow the user to add variables to use as well as for each variable to 1) choose type (categorical, bucketized, continuous), 2) set of values (categorical) or cutoff values (bucketized), and 3) (optional) labels for each category or bucket.
 - A child component to display table output
 
 #### User input form example
@@ -105,7 +105,7 @@ Microservice listens to POST request with the payload in JSON of the following s
       "label": "",
       "type": "", // "categorical" | "bucketized" | "continous"
       "unit": 1, // for bucketized or continuous variable only
-      "cutoffs": [], // for bucketized continuous variable only
+      "cutoffs": [], // for bucketized variable only
       "values": [], // for categorical variable only
       "keys": [] // optional; for bucketized or categorical variable only
     }
