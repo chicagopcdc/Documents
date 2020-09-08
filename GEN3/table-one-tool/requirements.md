@@ -44,13 +44,28 @@ Table One tool's React Component will be part of the `<GuppyDataExplorer>` compo
 The following features and functionalities are required of React Component:
 
 - Access to the filter values set by users via `<ExplorerFilter>` UI
-- A child component to receive user input for "exposure variable", "confounding variables", and type of test (t-test or chi-squared test).
+- A child component to encode user input for "exposure variable" and "confounding variables".
+  - input fields for "exposure variable" should allow the user to 1) select a variable, 2) choose "true" condition (specific category or range of values)
+  - input fields for "confounding variables" should allow the user to variables to use as well as for each variable 1) choose type (categorical, bucketized, continuous), 2) set of values (categorical) or cutoff values (bucketized), and 3) (optional) labels for each category or bucket.
 - A child component to display table output
-  - Using vanila JSX elements (`<table>`, `<thead>`, `<tbody>`, etc.) is recommended for building the table; Using [React Table](https://react-table.tanstack.com/) is also acceptable as it is an existing dependency.
+
+### Notes on dependencies
+
+For user input form, using vanila JSX elements (`<form>`, `<input>`, `<select>`, etc.) is strongly recommended for the prototpye/proof-of-concept application. For integrating into the `chicaopcdc/data-portal` codebase, consider replacing `<select>` with [React Select](https://react-select.com/) to match select elements in other parts of the codebase.
+
+For building the table, using vanila JSX elements (`<table>`, `<thead>`, `<tbody>`, etc.) is recommended since the output is a simple, static HTML table. Using [React Table](https://react-table.tanstack.com/) is also acceptable as it is an existing dependency. However, introducing any new NPM package to build the table is strongly discouraged.
 
 ## Microservice
 
 Table One tool's Microservice is a new endpoint for the [`PcdcAnalysisTools`](https://github.com/chicagopcdc/PcdcAnalysisTools) service added to the Gen3 infrastructure and responsible for generating table data from project data fetched from Data Source according to the user input provided by React Component.
+
+The work of generating table data includes:
+
+1. Aggregating counts for each confounding variable
+2. Calculating means or frequencies for each confounding variable
+3. Performing statistical test for each confounding variable
+   - _Two-sample Student's t-test of equal means_ for continuous confounding variable
+   - _Pearson's chi-squared test of homogeneity_ for bucketized or categorical confounding variable
 
 ### Request API
 
@@ -60,9 +75,58 @@ Microservice listens to POST request with the payload in JSON of the following s
 
 ```jsonc
 {
-  // request body
+  "patientSearchCriteria": {
+    // as constructed by <ExplorerFilter>
+    "query": "",
+    "variables": {
+      "filter": {
+        // ...
+      }
+    }
+  },
+  "exposureVariable": {
+    "name": "",
+    "trueIf": {
+      "value": "",
+      "operator": "" // "eq" | "gt" | "gte" | "lt" | "lte"
+    },
+    "label": {
+      "true": "",
+      "false": ""
+    }
+  },
+  "confoundingVariables": [
+    {
+      "name": "",
+      "label": "",
+      "type": "", // "categorical" | "bucketized" | "continous"
+      "unit": 1, // for bucketized or continuous variable only
+      "cutoffs": [], // for bucketized continuous variable only
+      "values": [], // for categorical variable only
+      "keys": [] // optional; for bucketized or categorical variable only
+    }
+  ]
 }
 ```
+
+- `exposureVariable` is a top-level factor used for dividing data into groups to test
+  - `trueIf` specifies the binary grouping criteria
+    - `operator` is set to `"eq"` by default
+    - Other `operator` values are available only for continuous variables
+- `confoundingVariables` is an array of the secondary factors
+  - `unit` is a number to consider the "unit" value for visual presentation and cutoffs
+  - `values` are set for categorical variables only
+  - `cutoffs` are set for continuous variables only; resulting bins are inclusive at the lower end and exclusive at the upper end
+  - `keys` are optional; if not provided, will be generated automatically based on `values` for a categorical variable or `cutoffs` for a continuous variable
+
+#### Discussions
+
+- Should we allow using "range" for `exposureVariable.trueIf`?
+  - This can be achieved by accepting an array for `exposureVariable.trueIf.value` value and adding `"in"` option for `exposureVariable.trueIf.operator`, to signal that the "trueIf" condition is a range of values.
+  - When using `exposureVariable.trueIf.operator: "in"`, the value for `exposureVariable.type` will be used to indicate how to parse the `exposureVariable.trueIf.value` value:
+    - if `"continuous"`, the array will look like `[min, max]`
+    - otherwise, the array will include a set of values to consider "true"
+  - If this option is to be implemented, it may be a good idea to rename `exposureVariable.trueIf.value` (singular) to `exposureVariable.trueIf.values` (plural)
 
 ### Response API
 
@@ -72,6 +136,42 @@ Microservice sends response with data in JSON of the following shape:
 
 ```jsonc
 {
-  // response data
+  "headers": {
+    "size": "",
+    "true": "",
+    "false": ""
+  },
+  "variables": [
+    {
+      "name": "",
+      "size": {
+        "total": 0,
+        "true": 0
+      },
+      "pval": 0.0,
+      "keys": [
+        {
+          "name": "", // if empty, data is displayed on the same row
+          "data": {
+            "true": 0.0,
+            "false": 0.0
+          }
+        }
+      ]
+    }
+  ]
 }
 ```
+
+- `headers` is an array of names for table columns (string)
+  - `size` is the column header for presenting total sample size as well as the "true" group size in parentheses.
+  - `true` is the column header for presenting values for "true" group that satisfies the `trueIf` condition (see Request API); `false` is the column header for presenting values for "false" group
+- `variables` contains data for the table body where each element includes information on specific `confoundingVariable`
+  - `size.total` is the total sample size; `size.true` is the sample size for the "true" group for `exposureVariable`
+  - `pval` is the p-value from the conducted test
+  - `keys` contains data for specific value for `confoundingVariable`
+    - if `name` is empty, data is displayed on the same row as the rest of `confoundingVariable`; otherwise, each "key" will get its own row
+
+### Notes on dependencies
+
+While there are multiple Python packages available for conducting statistical tests, it is highly recommended to use `scipy.stats` module for this job since `scipy` is an existing dependency for `PcdcAnalysisTools`. For handling data, `pandas` and `numpy` should suffice, which are also existing dependencies.
