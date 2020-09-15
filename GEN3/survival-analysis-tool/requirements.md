@@ -69,14 +69,8 @@ Microservice listens to POST request with the payload in JSON of the following s
 
 ```jsonc
 {
-  "patientSearchCriteria": {
-    // as constructed by <ExplorerFilter>
-    "query": "",
-    "variables": {
-      "filter": {
-        // ...
-      }
-    }
+  "filter": {
+    // transformed filter object
   },
   "factorVariable": "foo", // main treatment variable
   "stratificationVariable": "bar", // additional stratifying variables
@@ -86,6 +80,8 @@ Microservice listens to POST request with the payload in JSON of the following s
   // "timeUnit": "year" // not relevant for v1.0 release
 }
 ```
+
+- `"filter"` value is an output of applying `getGQLFilter` function imported from `@gen3/guppy/dist/components/Utils/queries` (see source code [here](https://github.com/uc-cdis/guppy/blob/45f12713f003621d13ee8c671d235ba2bac46ef9/src/components/Utils/queries.js#L195-L233)) to the filter object as constructed by `<ExplorerFilter>`.
 
 #### Discussions
 
