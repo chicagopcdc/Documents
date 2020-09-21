@@ -14,7 +14,7 @@ The Table One tool can be seen as a combination of the following elements:
   - A UI component that 1) allows users to provide input, 2) sends HTTP request to Microservice with the user input, 3) fetches the response JSON data from Microservice, and 4) generates/updates the table using the fetched data.
   - React Component consists of three UI child components: 1) a user input form, and 2) a table output.
 - Microservice
-  - A newly created web service that 1) listens to HTTP requests with user input as a payload, 2) fetches the data from Data Source with the filters, 3) generate table data using the fetched data with the exposure/confounding variables and test type, and 4) serve the table data to the client as the payload for HTTP response.
+  - A newly created web service that 1) listens to HTTP requests with user input as a payload, 2) fetches the data from Data Source with the filters, 3) generate table data using the fetched data with the grouping variable/covariates and test type, and 4) serve the table data to the client as the payload for HTTP response.
   - Microservice will be implemented as an endpoint of [`PcdcAnalysisTools`](https://github.com/chicagopcdc/PcdcAnalysisTools) service.
 - Data Source
   - A database or an intermediary service that responds to database queries.
@@ -44,9 +44,9 @@ Table One tool's React Component will be part of the `<GuppyDataExplorer>` compo
 The following features and functionalities are required of React Component:
 
 - Access to the filter values set by users via `<ExplorerFilter>` UI
-- A child component to encode user input for "exposure variable" and "confounding variables".
-  - input fields for "exposure variable" should allow the user to 1) select a variable, 2) choose "true" condition (specific category or range of values)
-  - input fields for "confounding variables" should allow the user to add variables to use as well as for each variable to 1) choose type (categorical, bucketized, continuous), 2) set of values (categorical) or cutoff values (bucketized), and 3) (optional) labels for each category or bucket.
+- A child component to encode user input for "grouping variable" and "covariates".
+  - input fields for "grouping variable" should allow the user to 1) select a variable, 2) choose "true" condition (specific category or range of values)
+  - input fields for "covariates" should allow the user to add variables to use as well as for each variable to 1) choose type (categorical, bucketized, continuous), 2) set of values (categorical) or cutoff values (bucketized), and 3) (optional) labels for each category or bucket.
 - A child component to display table output
 
 #### User input form example
@@ -65,11 +65,11 @@ Table One tool's Microservice is a new endpoint for the [`PcdcAnalysisTools`](ht
 
 The work of generating table data includes:
 
-1. Aggregating counts for each confounding variable
-2. Calculating means or frequencies for each confounding variable
-3. Performing statistical test for each confounding variable
-   - _Two-sample Student's t-test of equal means_ for continuous confounding variable
-   - _Pearson's chi-squared test of homogeneity_ for bucketized or categorical confounding variable
+1. Aggregating counts for each covariate
+2. Calculating means or frequencies for each covariate
+3. Performing statistical test for each covariate
+   - _Two-sample Student's t-test of equal means_ for continuous covariate
+   - _Pearson's chi-squared test of homogeneity_ for bucketized or categorical covariate
 
 ### Request API
 
@@ -88,7 +88,7 @@ Microservice listens to POST request with the payload in JSON of the following s
       }
     }
   },
-  "exposureVariable": {
+  "groupingVariable": {
     "name": "",
     "trueIf": {
       "value": "",
@@ -99,7 +99,7 @@ Microservice listens to POST request with the payload in JSON of the following s
       "false": ""
     }
   },
-  "confoundingVariables": [
+  "covariates": [
     {
       "name": "",
       "label": "",
@@ -113,11 +113,11 @@ Microservice listens to POST request with the payload in JSON of the following s
 }
 ```
 
-- `exposureVariable` is a top-level factor used for dividing data into groups to test
+- `groupingVariable` is a top-level factor used for dividing data into groups to test
   - `trueIf` specifies the binary grouping criteria
     - `operator` is set to `"eq"` by default
     - Other `operator` values are available only for continuous variables
-- `confoundingVariables` is an array of the secondary factors
+- `covariates` is an array of the secondary factors
   - `unit` is a number to consider the "unit" value for visual presentation and cutoffs
   - `values` are set for categorical variables only
   - `cutoffs` are set for continuous variables only; resulting bins are inclusive at the lower end and exclusive at the upper end
@@ -125,12 +125,12 @@ Microservice listens to POST request with the payload in JSON of the following s
 
 #### Discussions
 
-- Should we allow using "range" for `exposureVariable.trueIf`?
-  - This can be achieved by accepting an array for `exposureVariable.trueIf.value` value and adding `"in"` option for `exposureVariable.trueIf.operator`, to signal that the "trueIf" condition is a range of values.
-  - When using `exposureVariable.trueIf.operator: "in"`, the value for `exposureVariable.type` will be used to indicate how to parse the `exposureVariable.trueIf.value` value:
+- Should we allow using "range" for `groupingVariable.trueIf`?
+  - This can be achieved by accepting an array for `groupingVariable.trueIf.value` value and adding `"in"` option for `groupingVariable.trueIf.operator`, to signal that the "trueIf" condition is a range of values.
+  - When using `groupingVariable.trueIf.operator: "in"`, the value for `groupingVariable.type` will be used to indicate how to parse the `groupingVariable.trueIf.value` value:
     - if `"continuous"`, the array will look like `[min, max]`
     - otherwise, the array will include a set of values to consider "true"
-  - If this option is to be implemented, it may be a good idea to rename `exposureVariable.trueIf.value` (singular) to `exposureVariable.trueIf.values` (plural)
+  - If this option is to be implemented, it may be a good idea to rename `groupingVariable.trueIf.value` (singular) to `groupingVariable.trueIf.values` (plural)
 
 ### Response API
 
@@ -170,11 +170,11 @@ Microservice sends response with data in JSON of the following shape:
 - `headers` is an array of names for table columns (string)
   - `size` is the column header for presenting total sample size as well as the "true" group size in parentheses.
   - `true` is the column header for presenting values for "true" group that satisfies the `trueIf` condition (see Request API); `false` is the column header for presenting values for "false" group
-- `variables` contains data for the table body where each element includes information on specific `confoundingVariable`
-  - `size.total` is the total sample size; `size.true` is the sample size for the "true" group for `exposureVariable`
+- `variables` contains data for the table body where each element includes information on specific `covariate`
+  - `size.total` is the total sample size; `size.true` is the sample size for the "true" group for `groupingVariable`
   - `pval` is the p-value from the conducted test
-  - `keys` contains data for specific value for `confoundingVariable`
-    - if `name` is empty, data is displayed on the same row as the rest of `confoundingVariable`; otherwise, each "key" will get its own row
+  - `keys` contains data for specific value for `covariate`
+    - if `name` is empty, data is displayed on the same row as the rest of `covariate`; otherwise, each "key" will get its own row
 
 ### Notes on dependencies
 
@@ -182,8 +182,8 @@ While there are multiple Python packages available for conducting statistical te
 
 ## Limitations and expectations
 
-- The current API design restricts `exposureVariable` to be binary. While it is possible to relax this restriction and allow multiple top-level groups, i.e. `exposureVariable` values, this will result in a more complicated backend to implement additional statistical tests to handle such generalized cases.
-- The current API design assumes comparing means (using two-sample Student's t-test for equal means) for any continuous "confounding variable" as this is expected to be the most common use case. Implmenenting a comparison in other statistics between groups for a continuous variable will result in a more complicated backend to support different tests.
+- The current API design restricts `groupingVariable` to be binary. While it is possible to relax this restriction and allow multiple top-level groups, i.e. `groupingVariable` values, this will result in a more complicated backend to implement additional statistical tests to handle such generalized cases.
+- The current API design assumes comparing means (using two-sample Student's t-test for equal means) for any continuous "covariate" as this is expected to be the most common use case. Implmenenting a comparison in other statistics between groups for a continuous variable will result in a more complicated backend to support different tests.
 
 ## Example
 
@@ -191,7 +191,7 @@ While there are multiple Python packages available for conducting statistical te
 
 User-provided values are shown in `monospace`.
 
-- Exposure Variable:
+- Grouping variable:
   - Name: `"SMN"`
   - True if:
     - Value: `1`
@@ -199,7 +199,7 @@ User-provided values are shown in `monospace`.
   - Label for:
     - "True" group: `"SMN Formed"`
     - "False" group: `"No SMN Formed"`
-- Confounding Variables:
+- Covariates:
   - Variable 1:
     - Name: `"AGE"`
     - Label: `"Mean age at diagnosis (mo)"`
@@ -232,7 +232,7 @@ From React Component to Microservice
 ```json
 {
   "patientSearchCriteria": {},
-  "exposureVariable": {
+  "groupingVariable": {
     "name": "SMN",
     "trueIf": {
       "value": "1",
@@ -243,7 +243,7 @@ From React Component to Microservice
       "false": "No SMN Formed"
     }
   },
-  "confoundingVariables": [
+  "covariates": [
     {
       "name": "AGE",
       "label": "Mean age at diagnosis (mo)",
