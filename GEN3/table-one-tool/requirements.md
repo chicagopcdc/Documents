@@ -45,6 +45,7 @@ The following features and functionalities are required of React Component:
 
 - Access to the filter values set by users via `<ExplorerFilter>` UI
 - A child component to encode user input for "grouping variable" and "covariates".
+  - the component must accept a prop for the variables data derived from filter values and use it to dynamically generate input fields and their values; see [User input prop](#user-input-form-prop) section below.
   - input fields for "grouping variable" should allow the user to 1) select a variable, 2) choose "true" condition (specific category or range of values)
   - input fields for "covariates" should allow the user to add variables to use as well as for each variable to 1) choose type (categorical, bucketized, continuous), 2) set of values (categorical) or cutoff values (bucketized), and 3) (optional) labels for each category or bucket.
 - A child component to display table output
@@ -52,6 +53,34 @@ The following features and functionalities are required of React Component:
 #### User input form example
 
 ![Form image](./images/form.png)
+
+#### User input form prop
+
+> ⚠️ User input form prop shape is currently not stable.
+
+User input form takes a prop of the following shape:
+
+```js
+{
+  variables: [
+    {
+      name: "",
+      label: "",
+      type: "", // "categorical" | "continous" 
+      values: [], // for "categorical" variable only
+      range: [] // for "continuous" variable only
+    }
+  ]
+}
+```
+
+- `variables` is an array of variable object with the following properties:
+  - `name` is the name of the given variable
+  - `label` is the displayed label for the variable
+  - `type` is either `categorical` or `continuous`
+  - `values` is an array of possible values for the categorical variable, where each value is string
+  - `range` is tuple of `min` and `max` values for the continous variable, where `min` and `max` are numbers
+
 
 ### Notes on dependencies
 
