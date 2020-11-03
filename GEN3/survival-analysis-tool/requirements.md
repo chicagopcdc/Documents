@@ -75,8 +75,6 @@ Microservice listens to POST request with the payload in JSON of the following s
   "factorVariable": "foo", // main treatment variable
   "stratificationVariable": "bar", // additional stratifying variables
   "efsFlag": false, // flag for evant-free survival (EFS)
-  "startTime": 0,
-  "endTime": 10
   // "timeUnit": "year" // not relevant for v1.0 release
 }
 ```
