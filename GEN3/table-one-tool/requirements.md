@@ -66,6 +66,7 @@ User input form takes a prop of the following shape:
     {
       name: "",
       label: "",
+      isGrouping: true,
       type: "", // "categorical" | "continous" 
       values: [], // for "categorical" variable only
       range: [] // for "continuous" variable only
@@ -77,6 +78,7 @@ User input form takes a prop of the following shape:
 - `variables` is an array of variable object with the following properties:
   - `name` is the name of the given variable
   - `label` is the displayed label for the variable
+  - `isGrouping` is Boolean flag for whether the variable is a candidate for grouping variable or not (i.e. covariate)
   - `type` is either `categorical` or `continuous`
   - `values` is an array of possible values for the categorical variable, where each value is string
   - `range` is tuple of `min` and `max` values for the continous variable, where `min` and `max` are numbers
