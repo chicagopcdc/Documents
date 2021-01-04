@@ -40,6 +40,8 @@ The survival analysis React Component is part of `<ExplorerVisualizations>` and 
 
 ### Features
 
+**:warning: Features related to p-value and risk table may not be included in the final service.**
+
 React Component must include main features of the existing INRG survival analysis tool the new tool replaces in addition to some improvements (for performance, interactivity, etc.).
 
 The following features and functionalities are required of React Component:
