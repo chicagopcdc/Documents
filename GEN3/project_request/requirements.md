@@ -16,21 +16,21 @@ Returns a list of project requests. If the user is a requester it would be a lis
     'last_name': string,
     'institution': Institution object / string and company_id,
     'requests': [
-        'id': int,
-        'consortium': string,
-        'state': string,
-        'attributes_submitted': [
-            'id': int,
-            'name': string,
-            'type': string,
-            'value': string,
-            'completed_at': timestamp
-        ],
-        'attributes_required': [
-            'id': int,
-            'name': string,
-            'type': string
-        ]
+        {
+          'id': int,
+          'consortium': string,
+          'state': string,     //we may want to have state_id instead and add a state endpoint
+          'attributes_submitted': [
+              {
+                'id': int,
+                'name': string,
+                'type': string,
+                'value': string,
+                'completed_at': timestamp.
+                'optional': bool
+              }
+          ]
+        }
     ],
     'search_ids': [int]
   }
@@ -42,10 +42,9 @@ Create a new project request. Based on the data returned by the searches it will
 ### Request body:
 ```
 {
-  'first_name': string,
-  'last_name': string,
-  'institution': string / id,
-  'search_ids': [int],
+  'name': string,
+  'description': string,
+  'search_ids': [int]
 }
 ```
 
@@ -59,21 +58,21 @@ Create a new project request. Based on the data returned by the searches it will
     'last_name': string,
     'institution': Institution object / string and company_id,
     'requests': [
-        'id': int,
-        'consortium': string,
-        'state': string,
-        'attributes_submitted': [
-            'id': int,
-            'name': string,
-            'type': string,
-            'value': string,
-            'completed_at': timestamp
-        ],
-        'attributes_required': [
-            'id': int,
-            'name': string,
-            'type': string
-        ]
+        {
+          'id': int,
+          'consortium': string,
+          'state': string,
+          'attributes_submitted': [
+              {
+                'id': int,
+                'name': string,
+                'type': string,
+                'value': string,
+                'completed_at': timestamp,
+                'optional': bool
+              }
+          ]
+        }
     ],
     'search_ids': [int]
   }
@@ -100,7 +99,7 @@ Returns a presigned_url for the user to use to upload a file in S3.
 }
 ```
 
-## GET /next_state/{request_id}
+## GET /submit/{request_id}
 Checks if all the requested attributes for the state to change have been associated to the project request. If so it will move the request to the next state, otehrwise it will return a list of the missing items.
 ### Response body:
 ```
@@ -110,7 +109,7 @@ Checks if all the requested attributes for the state to change have been associa
       'name': string,
       'type': string
   ],
-  code: int
+  'state': string
 }
 ```
 
@@ -120,10 +119,12 @@ Returns a list of messages the user sent or received
 ### Response body:
 ```
 [
-    'sender_id': int,
-    'sent_at': timestamp,
-    'body': string,
-    'sent_to': [int]
+    {
+      'sender_id': int,
+      'sent_at': timestamp,
+      'body': string,
+      'sent_to': [int]
+    }
 ]
 ```
 
@@ -132,10 +133,13 @@ Returns a list of messages the user sent or received pertinent to a specific req
 ### Response body:
 ```
 [
-    'sender_id': int,
-    'sent_at': timestamp,
-    'body': string,
-    'sent_to': [int]
+    {
+      'sent_at': timestamp,
+      'body': string,
+      'sender
+      'sender_name': string,
+      'self': bool
+    }
 ]
 ```
 
@@ -144,7 +148,7 @@ Send a message to a list of users.
 ### Request body:
 ```
 {
-    'send_to': [int],
+    'request_id': int,
     'body': string
 ]
 ```
