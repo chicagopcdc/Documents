@@ -66,45 +66,7 @@ Create a new project request. Based on the data returned by the searches it will
 
 ### Response body:
 
-```jsonc
-[
-  {
-    "id": 0, // number (int)
-    "name": "", // string
-    "description": "", // string
-    "researcher": {
-      "first_name": "", // string
-      "last_name": "", // string
-      "institution": "" // string
-    },
-    "requests": [
-      {
-        "id": 0, // number (int)
-        "consortium": "", // string
-        "state": "", // string
-        "submitted_at": "", // string (timestamp) or null
-        "completed_at": "", // string (timestamp) or null
-        "attributes": [
-          {
-            "id": 0, // number (int)
-            "name": "", // string
-            "type": "", // string
-            "value": "", // string
-            "optional": true // bool
-          }
-        ]
-      }
-    ],
-    "searches": [
-      {
-        "name": "", // string
-        "description": "", // string
-        "filters": "" // string (serialized JSON)
-      }
-    ]
-  }
-]
-```
+Same as the `GET /projects` response.
 
 ## POST /attributes
 
