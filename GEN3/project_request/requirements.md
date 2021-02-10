@@ -39,7 +39,13 @@ Returns a list of project requests. If the user is a requester it would be a lis
         ]
       }
     ],
-    "search_ids": [] // array of number (int)
+    "searches": [
+      {
+        "name": "", // string
+        "description": "", // string
+        "filters": "" // string (serialized JSON)
+      }
+    ]
   }
 ]
 ```
@@ -89,7 +95,13 @@ Create a new project request. Based on the data returned by the searches it will
         ]
       }
     ],
-    "search_ids": [] // array of number (int)
+    "searches": [
+      {
+        "name": "", // string
+        "description": "", // string
+        "filters": "" // string (serialized JSON)
+      }
+    ]
   }
 ]
 ```
