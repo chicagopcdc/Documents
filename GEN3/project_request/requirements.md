@@ -27,7 +27,7 @@ Returns a list of project requests. If the user is a requester it would be a lis
         "id": 0, // number (int)
         "consortium": "", // string
         "state": "", // string; we may want to have state_id instead and add a state endpoint
-        "attributes_submitted": [
+        "attributes": [
           {
             "id": 0, // number (int)
             "name": "", // string
@@ -77,7 +77,7 @@ Create a new project request. Based on the data returned by the searches it will
         "id": 0, // number (int)
         "consortium": "", // string
         "state": "", // string
-        "attributes_submitted": [
+        "attributes": [
           {
             "id": 0, // number (int)
             "name": "", // string
