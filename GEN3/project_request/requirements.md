@@ -26,13 +26,14 @@ Returns a list of project requests. If the user is a requester it would be a lis
         "id": 0, // number (int)
         "consortium": "", // string
         "state": "", // string; we may want to have state_id instead and add a state endpoint
+        "submitted_at": "", // string (timestamp) or null
+        "completed_at": "", // string (timestamp) or null
         "attributes": [
           {
             "id": 0, // number (int)
             "name": "", // string
             "type": "", // string
             "value": "", // string
-            "completed_at": "", // string (timestamp)
             "optional": true // bool
           }
         ]
@@ -75,13 +76,14 @@ Create a new project request. Based on the data returned by the searches it will
         "id": 0, // number (int)
         "consortium": "", // string
         "state": "", // string
+        "submitted_at": "", // string (timestamp) or null
+        "completed_at": "", // string (timestamp) or null
         "attributes": [
           {
             "id": 0, // number (int)
             "name": "", // string
             "type": "", // string
             "value": "", // string
-            "completed_at": "", // string (timestamp)
             "optional": true // bool
           }
         ]
