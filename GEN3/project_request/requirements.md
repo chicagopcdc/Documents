@@ -17,7 +17,6 @@ Returns a list of project requests. If the user is a requester it would be a lis
     "name": "", // string
     "description": "", // string
     "researcher": {
-      "user_id": 0, // number (int)
       "first_name": "", // string
       "last_name": "", // string
       "institution": "" // string
@@ -67,7 +66,6 @@ Create a new project request. Based on the data returned by the searches it will
     "name": "", // string
     "description": "", // string
     "researcher": {
-      "user_id": 0, // number (int)
       "first_name": "", // string
       "last_name": "", // string
       "institution": "" // string
