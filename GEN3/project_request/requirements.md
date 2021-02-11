@@ -13,29 +13,39 @@ Returns a list of project requests. If the user is a requester it would be a lis
 ```jsonc
 [
   {
-    "id": 0, // int
-    "user_id": 0, // int
-    "first_name": "", // string
-    "last_name": "", // string
-    "institution": "", // string
+    "id": 0, // number (int)
+    "name": "", // string
+    "description": "", // string
+    "researcher": {
+      "first_name": "", // string
+      "last_name": "", // string
+      "institution": "" // string
+    },
     "requests": [
       {
-        "id": 0, // int
+        "id": 0, // number (int)
         "consortium": "", // string
         "state": "", // string; we may want to have state_id instead and add a state endpoint
-        "attributes_submitted": [
+        "submitted_at": "", // string (timestamp) or null
+        "completed_at": "", // string (timestamp) or null
+        "attributes": [
           {
-            "id": 0, // int
+            "id": 0, // number (int)
             "name": "", // string
             "type": "", // string
             "value": "", // string
-            "completed_at": "", // string (timestamp)
             "optional": true // bool
           }
         ]
       }
     ],
-    "search_ids": [] // array of number (int)
+    "searches": [
+      {
+        "name": "", // string
+        "description": "", // string
+        "filters": "" // string (serialized JSON)
+      }
+    ]
   }
 ]
 ```
@@ -56,35 +66,7 @@ Create a new project request. Based on the data returned by the searches it will
 
 ### Response body:
 
-```jsonc
-[
-  {
-    "id": 0, // number (int)
-    "user_id": 0, // number (int)
-    "first_name": "", // string
-    "last_name": "", // string
-    "institution": "", // string
-    "requests": [
-      {
-        "id": 0, // number (int)
-        "consortium": "", // string
-        "state": "", // string
-        "attributes_submitted": [
-          {
-            "id": 0, // number (int)
-            "name": "", // string
-            "type": "", // string
-            "value": "", // string
-            "completed_at": "", // string (timestamp)
-            "optional": true // bool
-          }
-        ]
-      }
-    ],
-    "search_ids": [] // array of number (int)
-  }
-]
-```
+Same as the `GET /projects` response.
 
 ## POST /attributes
 
