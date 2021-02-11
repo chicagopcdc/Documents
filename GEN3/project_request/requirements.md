@@ -68,6 +68,94 @@ Create a new project request. Based on the data returned by the searches it will
 
 Same as the `GET /projects` response.
 
+## GET /requests
+
+Returns a list of data requests with added information on requester user ("principal investigator"). Handles query string `?consortium={consortium_name}` to filter the list by consortium.
+
+```jsonc
+[
+  {
+    "id": 0, // number (int)
+    "consortium": "", // string
+    "state": "", // string
+    "submitted_at": "", // string (timestamp) or null
+    "completed_at": "", // string (timestamp) or null
+    "attributes": [
+      {
+        "id": 0, // number (int)
+        "name": "", // string
+        "type": "", // string
+        "value": "", // string
+        "optional": true // bool
+      }
+    ],
+    "project": {
+      "title": "", // string
+      "description": "" // string
+    },
+    "researcher": {
+      "first_name": "", // string
+      "last_name": "", // string
+      "institution": "" // string
+    }
+  }
+]
+```
+
+## PATCH /requests/{request_id}
+
+Updates a data request. Only certain properties are available to updates (see Request body below). Returns an updated request object as response.
+
+### Request body
+
+```jsonc
+{
+  "state": "", // string
+  "submitted_at": "", // string (timestamp) or null
+  "completed_at": "", // string (timestamp) or null
+  "attributes": [
+    {
+      "id": 0, // number (int)
+      "value": "" // string
+    }
+  ],
+  "project": {
+    "title": "", // string
+    "description": "" // string
+  }
+}
+```
+
+### Response body
+
+```jsonc
+{
+  "id": 0, // number (int)
+  "consortium": "", // string
+  "state": "", // string
+  "submitted_at": "", // string (timestamp) or null
+  "completed_at": "", // string (timestamp) or null
+  "attributes": [
+    {
+      "id": 0, // number (int)
+      "name": "", // string
+      "type": "", // string
+      "value": "", // string
+      "optional": true // bool
+    }
+  ],
+  "project": {
+    "title": "", // string
+    "description": "" // string
+  },
+  "researcher": {
+    "first_name": "", // string
+    "last_name": "", // string
+    "institution": "" // string
+  }
+}
+```
+
 ## POST /attributes
 
 Add an attribute to a request.
