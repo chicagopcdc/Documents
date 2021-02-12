@@ -36,7 +36,8 @@ Returns a list of project requests. If the user is a requester it would be a lis
             "value": "", // string
             "optional": true // bool
           }
-        ]
+        ],
+        "available_user_actions": [] // array of string ("SUBMIT" | "REQUEST_UPDATE" | "APPROVE" | "REJECT")
       }
     ],
     "searches": [
@@ -68,17 +69,96 @@ Create a new project request. Based on the data returned by the searches it will
 
 Same as the `GET /projects` response.
 
-## POST /attributes
+## PATCH /projects/{project_id}
 
-Add an attribute to a request.
+Updates project data. Only name and description values are available to updates (see Request body below).
 
 ### Request body:
 
 ```jsonc
 {
-  "project_id": 0, // number (int)
-  "attribute_id": 0, // number (int)
-  "value": "" // string
+  "name": "", // string
+  "description": "" // string
+}
+```
+
+### Response body:
+
+```jsonc
+{
+  "status": 200, // number (int; HTTP status code)
+  "error": "" //string
+}
+```
+
+## GET /requests
+
+Returns a list of data requests with added information on requester user ("principal investigator"). Handles query string `?consortium={consortium_name}` to filter the list by consortium.
+
+```jsonc
+[
+  {
+    "id": 0, // number (int)
+    "consortium": "", // string
+    "state": "", // string
+    "submitted_at": "", // string (timestamp) or null
+    "completed_at": "", // string (timestamp) or null
+    "attributes": [
+      {
+        "id": 0, // number (int)
+        "name": "", // string
+        "type": "", // string
+        "value": "", // string
+        "optional": true // bool
+      }
+    ],
+    "available_user_actions": [], // array of string ("SUBMIT" | "REQUEST_UPDATE" | "APPROVE" | "REJECT")
+    "project": {
+      "id": 0, // number (int)
+      "title": "", // string
+      "description": "" // string
+    },
+    "researcher": {
+      "first_name": "", // string
+      "last_name": "", // string
+      "institution": "" // string
+    }
+  }
+]
+```
+
+## POST /user-action
+
+Dispatches a user action, which triggers updates to the relevant data request's `state` as well as `attributes`.
+
+User actions are one of the following: `SUBMIT`, `REQUEST_UPDATE`, `APPROVE`, and `REJECT`. Action type `SUBMIT` is only avilable to requester ("researcher") user, and the other three action types are only available to reviewer user. Updating `attributes` is available for `SUBMIT` action only.
+
+### Request body
+
+```jsonc
+{
+  "type": "", // string ("SUBMIT" | "REQUEST_UPDATE" | "APPROVE" | "REJECT")
+  "payload": {
+    // request_id is required for all action types
+    "request_id": 0, // number (int)
+
+    // attributes is available for "SUBMIT" action type only
+    "attributes": [
+      {
+        "id": 0, // number (int)
+        "value": "" // string
+      }
+    ]
+  }
+}
+```
+
+### Response body:
+
+```jsonc
+{
+  "status": 200, // number (int; HTTP status code)
+  "error": "" //string
 }
 ```
 
@@ -91,25 +171,6 @@ Returns a presigned_url for the user to use to upload a file in S3.
 ```jsonc
 {
   "url": "" // string
-}
-```
-
-## GET /submit/{request_id}
-
-Checks if all the requested attributes for the state to change have been associated to the project request. If so it will move the request to the next state, otehrwise it will return a list of the missing items.
-
-### Response body:
-
-```jsonc
-{
-  "attribute_missing": [
-    {
-      "id": 0, // number (int)
-      "name": "", // string
-      "type": "" // string
-    }
-  ],
-  "state": "" // string
 }
 ```
 
