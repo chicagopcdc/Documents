@@ -90,6 +90,7 @@ Returns a list of data requests with added information on requester user ("princ
       }
     ],
     "project": {
+      "id": 0, // number (int)
       "title": "", // string
       "description": "" // string
     },
@@ -145,6 +146,7 @@ Updates a data request. Only certain properties are available to updates (see Re
     }
   ],
   "project": {
+    "id": 0, // number (int)
     "title": "", // string
     "description": "" // string
   },
