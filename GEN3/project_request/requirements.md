@@ -36,7 +36,8 @@ Returns a list of project requests. If the user is a requester it would be a lis
             "value": "", // string
             "optional": true // bool
           }
-        ]
+        ],
+        "available_user_actions": [] // array of string ("SUBMIT" | "REQUEST_UPDATE" | "APPROVE" | "REJECT")
       }
     ],
     "searches": [
@@ -89,6 +90,7 @@ Returns a list of data requests with added information on requester user ("princ
         "optional": true // bool
       }
     ],
+    "available_user_actions": [], // array of string ("SUBMIT" | "REQUEST_UPDATE" | "APPROVE" | "REJECT")
     "project": {
       "id": 0, // number (int)
       "title": "", // string
