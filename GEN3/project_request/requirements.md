@@ -157,6 +157,41 @@ Updates a data request. Only certain properties are available to updates (see Re
 }
 ```
 
+## POST /user-action
+
+Dispatches a user action, which triggers updates to the relevant data request's `state` as well as `attributes`.
+
+User actions are one of the following: `SUBMIT`, `REQUEST_UPDATE`, `APPROVE`, and `REJECT`. Action type `SUBMIT` is only avilable to requester ("researcher") user, and the other three action types are only available to reviewer user. Updating `attributes` is available for `SUBMIT` action only.
+
+### Request body
+
+```jsonc
+{
+  "type": "", // string ("SUBMIT" | "REQUEST_UPDATE" | "APPROVE" | "REJECT")
+  "payload": {
+    // request_id is required for all action types
+    "request_id": 0, // number (int)
+
+    // attributes is available for "SUBMIT" action type only
+    "attributes": [
+      {
+        "id": 0, // number (int)
+        "value": "" // string
+      }
+    ]
+  }
+}
+```
+
+### Response body:
+
+```jsonc
+{
+  "status": 200, // number (int; HTTP status code)
+  "error": "" //string
+}
+```
+
 ## POST /attributes
 
 Add an attribute to a request.
