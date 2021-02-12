@@ -111,7 +111,6 @@ Updates a data request. Only certain properties are available to updates (see Re
 
 ```jsonc
 {
-  "state": "", // string
   "submitted_at": "", // string (timestamp) or null
   "completed_at": "", // string (timestamp) or null
   "attributes": [
