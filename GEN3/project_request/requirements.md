@@ -103,60 +103,6 @@ Returns a list of data requests with added information on requester user ("princ
 ]
 ```
 
-## PATCH /requests/{request_id}
-
-Updates a data request. Only certain properties are available to updates (see Request body below). Returns an updated request object as response.
-
-### Request body
-
-```jsonc
-{
-  "submitted_at": "", // string (timestamp) or null
-  "completed_at": "", // string (timestamp) or null
-  "attributes": [
-    {
-      "id": 0, // number (int)
-      "value": "" // string
-    }
-  ],
-  "project": {
-    "title": "", // string
-    "description": "" // string
-  }
-}
-```
-
-### Response body
-
-```jsonc
-{
-  "id": 0, // number (int)
-  "consortium": "", // string
-  "state": "", // string
-  "submitted_at": "", // string (timestamp) or null
-  "completed_at": "", // string (timestamp) or null
-  "attributes": [
-    {
-      "id": 0, // number (int)
-      "name": "", // string
-      "type": "", // string
-      "value": "", // string
-      "optional": true // bool
-    }
-  ],
-  "project": {
-    "id": 0, // number (int)
-    "title": "", // string
-    "description": "" // string
-  },
-  "researcher": {
-    "first_name": "", // string
-    "last_name": "", // string
-    "institution": "" // string
-  }
-}
-```
-
 ## POST /user-action
 
 Dispatches a user action, which triggers updates to the relevant data request's `state` as well as `attributes`.
