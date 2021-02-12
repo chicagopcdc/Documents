@@ -138,20 +138,6 @@ User actions are one of the following: `SUBMIT`, `REQUEST_UPDATE`, `APPROVE`, an
 }
 ```
 
-## POST /attributes
-
-Add an attribute to a request.
-
-### Request body:
-
-```jsonc
-{
-  "project_id": 0, // number (int)
-  "attribute_id": 0, // number (int)
-  "value": "" // string
-}
-```
-
 ## GET /auth_url
 
 Returns a presigned_url for the user to use to upload a file in S3.
@@ -161,25 +147,6 @@ Returns a presigned_url for the user to use to upload a file in S3.
 ```jsonc
 {
   "url": "" // string
-}
-```
-
-## GET /submit/{request_id}
-
-Checks if all the requested attributes for the state to change have been associated to the project request. If so it will move the request to the next state, otehrwise it will return a list of the missing items.
-
-### Response body:
-
-```jsonc
-{
-  "attribute_missing": [
-    {
-      "id": 0, // number (int)
-      "name": "", // string
-      "type": "" // string
-    }
-  ],
-  "state": "" // string
 }
 ```
 
