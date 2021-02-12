@@ -69,6 +69,28 @@ Create a new project request. Based on the data returned by the searches it will
 
 Same as the `GET /projects` response.
 
+## PATCH /projects/{project_id}
+
+Updates project data. Only name and description values are available to updates (see Request body below).
+
+### Request body:
+
+```jsonc
+{
+  "name": "", // string
+  "description": "" // string
+}
+```
+
+### Response body:
+
+```jsonc
+{
+  "status": 200, // number (int; HTTP status code)
+  "error": "" //string
+}
+```
+
 ## GET /requests
 
 Returns a list of data requests with added information on requester user ("principal investigator"). Handles query string `?consortium={consortium_name}` to filter the list by consortium.
