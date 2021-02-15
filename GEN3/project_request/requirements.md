@@ -17,6 +17,7 @@ Returns a list of project requests. If the user is a requester it would be a lis
     "name": "", // string
     "description": "", // string
     "researcher": {
+      "id": 0, // number (int)
       "first_name": "", // string
       "last_name": "", // string
       "institution": "" // string
@@ -119,6 +120,7 @@ Returns a list of data requests with added information on requester user ("princ
       "description": "" // string
     },
     "researcher": {
+      "id": 0, // number (int)
       "first_name": "", // string
       "last_name": "", // string
       "institution": "" // string
@@ -176,34 +178,21 @@ Returns a presigned_url for the user to use to upload a file in S3.
 
 ## GET /messages
 
-Returns a list of messages the user sent or received
+Returns a list of messages for each request. Handles query string `?request_id={request_id}` to filter the list by request.
 
 ### Response body:
 
 ```jsonc
 [
   {
-    "sender_id": 0, // number (int)
+    "request_id": 0, // number (int)
+    "sender": {
+      "id": 0, // number (int)
+      "fist_name": "", // string
+      "last_name": "" // string
+    },
     "sent_at": "", // string (timestamp)
-    "body": "", // string
-    "sent_to": [] // array of number (int)
-  }
-]
-```
-
-## GET /messages/{request_id}
-
-Returns a list of messages the user sent or received pertinent to a specific request
-
-### Response body:
-
-```jsonc
-[
-  {
-    "sent_at": "", // string (timestamp)
-    "body": "", // string
-    "sender_name": "", // string
-    "self": true // bool
+    "body": "" // string
   }
 ]
 ```
