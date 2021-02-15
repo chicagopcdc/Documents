@@ -166,7 +166,7 @@ User actions are one of the following: `SUBMIT`, `REQUEST_UPDATE`, `APPROVE`, an
 
 ## POST /file_upload_url
 
-Returns a pre-signed URL for uploading a file to S3. The frontend application can then make a `PUT` request to upload binary data directly to the signed URL where the body is a blob.
+Returns a pre-signed URL for uploading a file to S3. The frontend application can then make a `PUT` request to upload binary data directly to the signed URL.
 
 ### Request body:
 
