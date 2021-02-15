@@ -183,10 +183,14 @@ Returns a list of messages the user sent or received
 ```jsonc
 [
   {
-    "sender_id": 0, // number (int)
+    "request_id": 0, // number (int)
+    "sender": {
+      "id": 0, // number (int)
+      "fist_name": "", // string
+      "last_name": "" // string
+    },
     "sent_at": "", // string (timestamp)
-    "body": "", // string
-    "sent_to": [] // array of number (int)
+    "body": "" // string
   }
 ]
 ```
@@ -197,16 +201,7 @@ Returns a list of messages the user sent or received pertinent to a specific req
 
 ### Response body:
 
-```jsonc
-[
-  {
-    "sent_at": "", // string (timestamp)
-    "body": "", // string
-    "sender_name": "", // string
-    "self": true // bool
-  }
-]
-```
+Same as the `GET /messages` response.
 
 ## POST /message
 
