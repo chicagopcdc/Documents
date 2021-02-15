@@ -17,6 +17,7 @@ Returns a list of project requests. If the user is a requester it would be a lis
     "name": "", // string
     "description": "", // string
     "researcher": {
+      "id": 0, // number (int)
       "first_name": "", // string
       "last_name": "", // string
       "institution": "" // string
@@ -119,6 +120,7 @@ Returns a list of data requests with added information on requester user ("princ
       "description": "" // string
     },
     "researcher": {
+      "id": 0, // number (int)
       "first_name": "", // string
       "last_name": "", // string
       "institution": "" // string
