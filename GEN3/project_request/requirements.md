@@ -172,7 +172,7 @@ Returns a pre-signed URL for uploading a file to S3. The frontend application ca
 
 ```jsonc
 {
-  "filename": "" // string; {user_id}_{project_id}_{attribute_id}_{timestamp}.{ext}
+  "filename": "" // string; {user_id}_{request_id}_{attribute_id}_{timestamp}.{ext}
 }
 ```
 
