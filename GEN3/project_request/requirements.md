@@ -164,9 +164,17 @@ User actions are one of the following: `SUBMIT`, `REQUEST_UPDATE`, `APPROVE`, an
 }
 ```
 
-## GET /auth_url
+## POST /file_upload_url
 
-Returns a presigned_url for the user to use to upload a file in S3.
+Returns a pre-signed URL for uploading a file to S3. The frontend application can then make a `PUT` request to upload binary data directly to the signed URL where the body is a blob.
+
+### Request body:
+
+```jsonc
+{
+  "filename": "" // string; {user_id}_{project_id}_{attribute_id}_{timestamp}.{ext}
+}
+```
 
 ### Response body:
 
