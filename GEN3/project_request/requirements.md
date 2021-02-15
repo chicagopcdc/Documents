@@ -178,7 +178,7 @@ Returns a presigned_url for the user to use to upload a file in S3.
 
 ## GET /messages
 
-Returns a list of messages the user sent or received
+Returns a list of messages for each request. Handles query string `?request_id={request_id}` to filter the list by request.
 
 ### Response body:
 
@@ -196,14 +196,6 @@ Returns a list of messages the user sent or received
   }
 ]
 ```
-
-## GET /messages/{request_id}
-
-Returns a list of messages the user sent or received pertinent to a specific request
-
-### Response body:
-
-Same as the `GET /messages` response.
 
 ## POST /message
 
