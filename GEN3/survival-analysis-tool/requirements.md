@@ -74,14 +74,23 @@ Microservice listens to POST request with the payload in JSON of the following s
   "filter": {
     // transformed filter object
   },
-  "factorVariable": "foo", // main treatment variable
-  "stratificationVariable": "bar", // additional stratifying variables
-  "efsFlag": false, // flag for evant-free survival (EFS)
-  // "timeUnit": "year" // not relevant for v1.0 release
+  "parameter": {
+    "factorVariable": "foo", // main treatment variable
+    "stratificationVariable": "bar", // additional stratifying variables
+    "efsFlag": false, // flag for evant-free survival (EFS)
+    // "timeUnit": "year" // not relevant for v1.0 release
+  },
+  "result": {
+    "survival": true,
+    "risktable": false,
+    "pval": false,
+  }
 }
 ```
 
 - `"filter"` value is an output of applying `getGQLFilter` function imported from `@gen3/guppy/dist/components/Utils/queries` (see source code [here](https://github.com/uc-cdis/guppy/blob/45f12713f003621d13ee8c671d235ba2bac46ef9/src/components/Utils/queries.js#L195-L233)) to the filter object as constructed by `<ExplorerFilter>`.
+- `"parameter"` value is an object of a set of parameters used in fitting survival model
+- `"result"` value is an object of a set of boolean flags. If the flag is set to `true`, the corresponding survival analysis result will be included in the response.
 
 #### Discussions
 
