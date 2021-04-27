@@ -112,7 +112,13 @@ Microservice sends response with data in JSON of the following shape:
   "pval": ,     // p-value of log-rank test; float if available, null otherwise
   "risktable": [
     {
-      "name": , // based on factor/stratificationVariable values; string
+      // based on factor/stratificationVariable values
+      "group": [
+        {
+          "variable": "",
+          "value": ""
+        }
+      ],
       "data": {
         "nrisk": , // number at risk; int
         "time": ,  // time in year; float
@@ -121,7 +127,13 @@ Microservice sends response with data in JSON of the following shape:
   ],
   "survival": [
     {
-      "name": , // based on factor/stratificationVariable values; string
+      // based on factor/stratificationVariable values
+      "group": [
+        {
+          "variable": "",
+          "value": ""
+        }
+      ],
       "data": {
         "prob": , // survival probability; float
         "time":   // time in year; float
@@ -131,10 +143,15 @@ Microservice sends response with data in JSON of the following shape:
 }
 ```
 
-- `"name"` for each item in risktable/survival array is set to
-  - `"All"` if neither `factorVariable` nor `stratificationVariable` value is provided.
-  - `[factorVariable]=[factorVariableValue]` if only `factorVariable` value is provided, e.g. `RACE=1`.
-  - `[factorVariable]=[factorVariableValue],[stratificationVariable]=[stratificationVariableValue]` if both `factorVariable` and `stratificationVariable` values are provided, e.g. `RACE=1,SEX=1`
+- `"group"` for each item in risktable/survival array is set in the following way:
+  - if neither `factorVariable` nor `stratificationVariable` value is provided:
+    - `[]`  
+  - if only `factorVariable` value is provided:
+    - `[{ "variable": "factor_variable", "value": "factor_value" }]`
+    -  e.g. `[{ "variable": "RACE", "value": "1" }]`
+  - if both `factorVariable` and `stratificationVariable` values are provided
+    - `[{ "variable": "factor_variable", "value": "factor_value" }, { "variable": "stratification_variable", "value": "stratification_value" }]`  
+    - e.g. `[{ "variable": "RACE", "value": "1" }, { "variable": "SEX", "value": "1" }]`
 
 ## Resources
 
